@@ -58,7 +58,7 @@ class VotesBackend(ApplicationSession):
         result = {'subject': subject, 'votes': self._votes[subject]}
         self.publish('io.crossbar.demo.vote.onvote', result)
 	print ("received vote for "+result )
-        return "voted for "+result
+        return result
 
     @wamp.register(u'io.crossbar.demo.vote.reset')
     def resetVotes(self):
