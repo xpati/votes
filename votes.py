@@ -43,14 +43,14 @@ class VotesBackend(ApplicationSession):
         self._votes = {
             'Banana': 0,
             'Chocolate': 0,
-            'Lemon': 0
+            'Lemon': 0,
+	    'Winner':0	
         }
 
     @wamp.register(u'io.crossbar.demo.vote.get')
     def getVotes(self):
 	print ("received request for current vote count")
         return [{'subject': key, 'votes': value} for key, value in self._votes.items()]
-
 
     @wamp.register(u'io.crossbar.demo.vote.vote')
     def submitVote(self, subject):
