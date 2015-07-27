@@ -91,6 +91,7 @@ function drawAnimatedRingChart(config) {
         'fill': function (d, i) {
             return color(i);
         }
+
     })
     .transition()
     .duration(config.duration || 1000)
@@ -113,12 +114,13 @@ function graph(){
         el: '.animated-ring svg',
         outerRadius: outerRadius,
         innerRadius: outerRadius - ringWidth,
-        data: dataset)
+        data: dataset
     });
  // });
 }
 
 /**/
+
 
 
 
@@ -166,8 +168,9 @@ function main (session) {
 	document.getElementById("votesWinner").value=winner;
 
 
-		graph();
+	graph();
 
+      });
 
 
    // get the current vote count
@@ -192,7 +195,6 @@ function main (session) {
 	}
 
 	document.getElementById("votesWinner").value =winner;
-
 
 
 
