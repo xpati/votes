@@ -110,7 +110,17 @@ drawAnimatedRingChart({
 function graph(){
 // Listen to changes on the select element
 //document.querySelector('#voteContainer').addEventListener('click', function (e) {
-      drawAnimatedRingChart({
+    var choco=parseInt(document.getElementById("votesChocolate").value);
+var banana=parseInt(document.getElementById("votesBanana").value);
+var lemon=parseInt(document.getElementById("votesLemon").value);	
+					
+  var dataset = [
+		{name:'votesChocolate', count : choco},
+		{name:'votesBanana', count : banana},
+		{name:'votesLemon', count : lemon}
+		];
+
+ drawAnimatedRingChart({
         el: '.animated-ring svg',
         outerRadius: outerRadius,
         innerRadius: outerRadius - ringWidth,
