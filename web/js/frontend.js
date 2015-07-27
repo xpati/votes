@@ -35,9 +35,9 @@ var banana=parseInt(document.getElementById("votesBanana").value);
 var lemon=parseInt(document.getElementById("votesLemon").value);	
 					
   var dataset = [
-		{name:'votesChocolate', count : choco},
-		{name:'votesBanana', count : banana},
-		{name:'votesLemon', count : lemon}
+		{names:'C', count : choco},
+		{names:'B', count : banana},
+		{names:'L', count : lemon}
 		];
 
 
@@ -52,6 +52,7 @@ function drawAnimatedRingChart(config) {
         return d.count;
     });
 
+	
     var color = d3.scale.category10();
     var arc = d3.svg.arc();
 
@@ -96,7 +97,16 @@ function drawAnimatedRingChart(config) {
     .transition()
     .duration(config.duration || 1000)
     .attrTween('d', tweenPie);
+
+
+	 groups.append("text")
+      .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+      .attr("dy", ".35em")
+      .style("text-anchor", "middle")
+      .text(function(d) { return d.data.names; });
+
 }
+
 
 // Render the initial ring
 drawAnimatedRingChart({
@@ -115,10 +125,11 @@ var banana=parseInt(document.getElementById("votesBanana").value);
 var lemon=parseInt(document.getElementById("votesLemon").value);	
 					
   var dataset = [
-		{name:'votesChocolate', count : choco},
-		{name:'votesBanana', count : banana},
-		{name:'votesLemon', count : lemon}
+		{names:'C', count : choco},
+		{names:'B', count : banana},
+		{names:'L', count : lemon}
 		];
+
 
  drawAnimatedRingChart({
         el: '.animated-ring svg',
