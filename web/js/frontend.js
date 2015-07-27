@@ -9,14 +9,12 @@ if (document.location.origin == "file://") {
                document.location.host + "/ws";
 }
 
-
 // the WAMP connection to the Router
 //
 var connection = new autobahn.Connection({
    url: wsuri,
    realm: "crossbardemo"
 });
-
 
 // fired when connection is established and session attached
 //
@@ -27,6 +25,55 @@ connection.onopen = function (session, details) {
 
 };
 
+function graphic (dataset){
+		var outerRadius = 100;
+			var innerRadius = 0;
+			
+			var arc = d3.svg.arc()
+				.innerRadius(outerRadius)///size
+				.outerRadius(innerRadius);
+			
+			var pie = d3.layout.pie();
+			
+			//Easy colors accessible via a 10-step ordinal scale
+			var color = d3.scale.category10();
+
+			//Create SVG element
+			var svg = d3.select("body")
+				.append("svg")
+				.attr("width", 700)
+				.attr("height", 700);
+			
+			//Set up groups
+			var arcs = svg.selectAll("g.arc")
+				.data(pie(dataset))
+				.enter()
+				.append("g")
+				.attr("class", "arc")
+				.attr("transform", "translate(500,100)");
+			
+			//Draw arc paths
+			arcs.append("path")
+			    .attr("fill", function(d, i) {
+			    	return color(i);
+			    })
+			    .attr("d", arc);
+			
+			//Labels
+			arcs.append("text")
+			    .attr("transform", function(d) {
+			    	return "translate(" + arc.centroid(d) + ")";
+			    })
+			    .attr("text-anchor", "middle")
+			    .text(function(d) {
+			    	return d.value;
+			    });
+
+}
+
+
+
+
 function main (session) {
    // subscribe to future vote event
    session.subscribe("io.crossbar.demo.vote.onvote",
@@ -36,7 +83,7 @@ function main (session) {
 
 	var winner=document.getElementById("votesWinner").value;
 	var vote=document.getElementById("votes" + event.subject).value;
-	
+
 	if(winner=="No Winner"){
 			
 		var different="";
@@ -55,7 +102,8 @@ function main (session) {
 		}else{	
 			winner="No Winner";
 		}
-		
+
+
 	}else{
 		var voteWining=  document.getElementById("votes" + winner).value;
 
@@ -94,6 +142,17 @@ function main (session) {
 	}
 
 	document.getElementById("votesWinner").value =winner;
+
+
+var choco=parseInt(document.getElementById("votesBanana").value);
+var banana=parseInt(document.getElementById("votesChocolate").value);
+var lemon=parseInt(document.getElementById("votesLemon").value);	
+					
+
+  var dataset = [choco,banana,lemon];
+	
+	graphic(dataset);
+
 
    }, session.log);
 
