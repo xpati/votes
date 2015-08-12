@@ -7,7 +7,7 @@ import RPi.GPIO as GPIO
 import time
 
 
-class VotesBackend(ApplicationSession):  
+class VotesBackend(ApplicationSession):
 
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(18,GPIO.OUT)
@@ -21,9 +21,6 @@ class VotesBackend(ApplicationSession):
     def __init__(self, config):
         ApplicationSession.__init__(self, config)
         self.init()
-	GPIO.add_event_detect(17,GPIO.FALLING,callback=self.my_callback, bouncetime=500)
-	GPIO.add_event_detect(22,GPIO.FALLING,callback=self.my_callback,bouncetime=500)
-	GPIO.add_event_detect(25,GPIO.FALLING,callback=self.my_callback,bouncetime=500)
 
     def init(self):
 	self._votes = {
@@ -33,35 +30,20 @@ class VotesBackend(ApplicationSession):
 	    'Winner':0	
         }
 
-  
-    def turnsON(self,subject):
-	if subject == "Banana":
-		number=24
-	elif subject == "Chocolate":
-		number = 23
-	elif subject == "Lemon":
-		number = 18
-	GPIO.output(number,GPIO.HIGH)
-	time.sleep(0.1)
-	GPIO.output(number,GPIO.LOW)
+    def my_callback(channel):
+	if channel==17:
+		print "if"
 
-    def my_callback(self,number):
-	print number
-	if number == 17:
-		self.submitVote("Lemon")
-	if number == 22:
-		self.submitVote("Chocolate")
-	if number==25:
-		self.submitVote("Banana")
+		else:
+		print "else"
+	
 
+    GPIO.add_event_detect(17,GPIO.RISING,callback=my_callback)
+    GPIO.add_event_detect(22,GPIO.RISING,callback=my_callback)
 
-   #   GPIO.add_event_detect(22,GPIO.RISING,callback=my_callback)
-   # GPIO.add_event_detect(25,GPIO.RISING,callback=my_callback) 	
-   
     @wamp.register(u'io.crossbar.demo.vote.get')
     def getVotes(self):
 	print ("received request for current vote count = refresh")
-#	self.my_callback(17)
         return [{'subject': key, 'votes': value} for key, value in self._votes.items()]
 
     @wamp.register(u'io.crossbar.demo.vote.vote')
@@ -70,7 +52,21 @@ class VotesBackend(ApplicationSession):
         result = {'subject': subject, 'votes': self._votes[subject]}
         self.publish('io.crossbar.demo.vote.onvote', result)
 	print ("received vote for "+subject)
-	self.turnsON(subject)
+	if subject=="Banana":
+		GPIO.output(24,GPIO.HIGH)
+		time.sleep(0.5)
+		GPIO.output(24,GPIO.LOW)
+		print "banan"
+	elif subject=="Chocolate":
+		GPIO.output(23,GPIO.HIGH)
+		time.sleep(0.5)
+		GPIO.output(23,GPIO.LOW)
+		print "choco"	
+	elif subject=="Lemon":
+		GPIO.output(18,GPIO.HIGH)
+		time.sleep(0.5)
+		GPIO.output(18,GPIO.LOW)
+		print "lemon"
         return result
 
     @wamp.register(u'io.crossbar.demo.vote.reset')
